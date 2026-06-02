@@ -8,11 +8,13 @@ public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;   // 🔥 FIXED (int → Long)
 
     private String name;
     private int age;
     private String disease;
+
+    public Long getId() { return id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
