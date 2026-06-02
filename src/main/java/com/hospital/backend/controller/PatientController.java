@@ -17,21 +17,37 @@ public class PatientController {
         this.repo = repo;
     }
 
+    // 🔥 GET ALL
     @GetMapping
     public List<Patient> getAll() {
         return repo.findAll();
     }
 
+    // 🔥 ADD (DUPLICATE STOP)
     @PostMapping
     public Patient add(@RequestBody Patient p) {
+
+        List<Patient> all = repo.findAll();
+
+        for (Patient existing : all) {
+            if (existing.getName().equalsIgnoreCase(p.getName()) &&
+                existing.getSymptoms().equalsIgnoreCase(p.getSymptoms())) {
+
+                // ❌ duplicate मिला → नया save नहीं करेगा
+                return existing;
+            }
+        }
+
         return repo.save(p);
     }
 
+    // 🔥 DELETE
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         repo.deleteById(id);
     }
 
+    // 🔥 UPDATE (Doctor panel use)
     @PutMapping("/{id}")
     public Patient update(@PathVariable Long id, @RequestBody Patient updated) {
         Patient p = repo.findById(id).orElseThrow();
