@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/doctors")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class DoctorController {
 
     private final DoctorRepository repo;
@@ -25,5 +25,10 @@ public class DoctorController {
     @PostMapping
     public Doctor addDoctor(@RequestBody Doctor doctor) {
         return repo.save(doctor);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteDoctor(@PathVariable Long id) {
+        repo.deleteById(id);
     }
 }
