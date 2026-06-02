@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/patients")
-@CrossOrigin(origins = "*") // 🔥 allow all (render + localhost)
+@CrossOrigin(origins = "*")
 public class PatientController {
 
     private final PatientRepository repo;
@@ -17,21 +17,29 @@ public class PatientController {
         this.repo = repo;
     }
 
-    // ✅ ADD PATIENT
-    @PostMapping
-    public Patient addPatient(@RequestBody Patient patient) {
-        return repo.save(patient);
-    }
-
-    // ✅ GET ALL PATIENTS
     @GetMapping
-    public List<Patient> getPatients() {
+    public List<Patient> getAll() {
         return repo.findAll();
     }
 
-    // ✅ DELETE PATIENT
+    @PostMapping
+    public Patient add(@RequestBody Patient p) {
+        return repo.save(p);
+    }
+
     @DeleteMapping("/{id}")
-    public void deletePatient(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         repo.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Patient update(@PathVariable Long id, @RequestBody Patient updated) {
+        Patient p = repo.findById(id).orElseThrow();
+
+        p.setDisease(updated.getDisease());
+        p.setTreatment(updated.getTreatment());
+        p.setBill(updated.getBill());
+
+        return repo.save(p);
     }
 }
